@@ -20,7 +20,7 @@ internal sealed class SettingsForm : Form
         MaximizeBox = false;
         MinimizeBox = false;
         StartPosition = FormStartPosition.CenterScreen;
-        ClientSize = new Size(460, 240);
+        ClientSize = new Size(460, 252);
 
         var folderLabel = new Label
         {
@@ -102,13 +102,13 @@ internal sealed class SettingsForm : Form
             Text = $"v{AppInfo.Version}",
             AutoSize = true,
             ForeColor = SystemColors.GrayText,
-            Location = new Point(12, 192),
+            Location = new Point(100, 206),
         };
 
         var help = new Button
         {
             Text = L.MenuHelp,
-            Location = new Point(12, 200),
+            Location = new Point(12, 212),
             Width = 75,
         };
         help.Click += (_, _) =>
@@ -121,7 +121,7 @@ internal sealed class SettingsForm : Form
         {
             Text = L.Save,
             DialogResult = DialogResult.OK,
-            Location = new Point(292, 200),
+            Location = new Point(292, 212),
             Width = 75,
         };
 
@@ -129,7 +129,7 @@ internal sealed class SettingsForm : Form
         {
             Text = L.Cancel,
             DialogResult = DialogResult.Cancel,
-            Location = new Point(373, 200),
+            Location = new Point(373, 212),
             Width = 75,
         };
 
