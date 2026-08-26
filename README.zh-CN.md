@@ -6,39 +6,54 @@
 
 # Flameshot 剪贴板助手
 
-Windows 托盘小工具，解决 Flameshot 复制截图时剪贴板文件名重复（如 `image.png`）的问题，让你能连续粘贴多张截图。
+**仅支持 Windows。** 系统托盘程序，只监视截图**保存目录**，有新 PNG 写入时更新剪贴板。
 
-## 功能
+**不**监听键盘、不截屏、不与 Flameshot 通信，只做文件夹监视。下文以 [Flameshot](https://flameshot.org/) 为例说明用法。
 
-- 监视 Flameshot 截图保存目录，检测到新 PNG 后自动更新剪贴板
-- 剪贴板同时包含 **图片预览** 和 **文件引用**（真实 PNG 路径与文件名）
-- 粘贴到 Cursor、浏览器、聊天窗口时能看到图片，且每次文件名不同
-- 系统托盘运行，不监听键盘、不拦截 Flameshot 的 Ctrl+C
-- 可配置监视文件夹、开机自启、界面语言（中文 / English / 自动）
-- 首次运行会尝试从 `%APPDATA%\flameshot\flameshot.ini` 读取 `savePath`
+## 要解决的问题（以 Flameshot 为例）
 
-## 工作原理
+Flameshot 截图后按 **Ctrl+C**，剪贴板里的文件名经常是同一个（`image.png`）。在 Cursor、浏览器、聊天里连续粘贴会失败或覆盖上一张。
+
+## 本程序做什么
+
+1. 配置一个 **监视文件夹** —— 截图复制/保存后 PNG 实际写入的目录。
+2. 检测到新 `.png` 后，向剪贴板写入：
+   - **图片预览**
+   - **文件引用**（真实路径与唯一文件名）
+3. 在目标处 **Ctrl+V** 即可粘贴，每次文件名不同。
 
 ```
-Flameshot 截图 → Ctrl+C → 保存 xxx.png 到磁盘
+Flameshot：截图 → Ctrl+C → 保存 2025-08-27_12-30-45.png
         ↓
-本程序检测到新文件
+本程序（仅监视目录）发现新文件
         ↓
-剪贴板：① 图片预览  ② 文件引用（唯一路径）
+更新剪贴板：图片 + 文件路径
         ↓
-目标应用 Ctrl+V 粘贴
+任意处 Ctrl+V
 ```
 
-## Flameshot 必设项
+## Flameshot 配置（示例）
 
-1. **Save image after copy**（复制后保存）—— 必须开启
-2. **Use fixed path for screenshots to save**（固定保存路径）
-3. 建议关闭 **Use JPG format for clipboard**（使用 PNG）
-4. Flameshot 保存路径必须与程序的 **监视文件夹** 完全一致（不是上一级目录）
+安装 Flameshot 后，在其设置中：
+
+| Flameshot 选项 | 建议 |
+|----------------|------|
+| Save image after copy（复制后保存） | **开启**（必须，否则没有 PNG 可监视） |
+| Use fixed path for screenshots to save（固定保存路径） | **开启** |
+| 保存路径 | 如 `C:\Users\你\Pictures\Flameshot` |
+| Use JPG format for clipboard | **关闭**（建议 PNG） |
+
+在本程序 **设置 → 监视文件夹** 中填写 **与 Flameshot 相同的路径** —— 必须是实际写入 `.png` 的文件夹，不是 `Pictures` 等上一级目录。
+
+首次运行会尝试从 `%APPDATA%\flameshot\flameshot.ini` 读取 `savePath`。
+
+## 运行环境
+
+- **Windows 10/11**（WinForms 托盘程序，不支持 macOS / Linux）
+- 构建需要 [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- 需要一款在复制时将 PNG 保存到固定目录的截图工具（下文以 Flameshot 为例）
 
 ## 构建与运行
-
-需要 [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) 和 Windows。
 
 ```powershell
 dotnet build -c Release
@@ -51,27 +66,38 @@ dotnet build -c Release
 
 | 选项 | 说明 |
 |------|------|
-| 监视文件夹 | Flameshot 实际写入 `.png` 的目录 |
+| 监视文件夹 | 要监视的截图保存目录（`*.png`） |
 | 开机自启 | 登录后自动启动 |
-| 语言 | 自动（跟随系统）/ 中文 / English |
+| 语言 | 自动 / 中文 / English |
 
-配置文件：`%LOCALAPPDATA%\FlameshotClipboardHelper\settings.json`
+配置：`%LOCALAPPDATA%\FlameshotClipboardHelper\settings.json`
 
-## 日常使用
+## 日常使用（Flameshot）
 
-1. 保持托盘图标在运行
-2. Flameshot 截图 → **Ctrl+C**
-3. 等待托盘提示「已更新剪贴板：xxx.png」（约 0.5 秒）
-4. 在目标窗口 **Ctrl+V** 粘贴
+1. 保持托盘图标在运行。
+2. Flameshot 框选区域 → **Ctrl+C**。
+3. 等待托盘提示「已更新剪贴板：xxx.png」（约 0.5 秒）。
+4. 在 Cursor、浏览器或聊天里 **Ctrl+V**。
 
 ## 常见问题
 
-- **Win+V 只有路径、没有图片？**  
-  监视目录与 Flameshot 保存目录不一致，或 PNG 尚未写完。
-- **没有「已更新剪贴板」提示？**  
-  检查 Flameshot 是否开启 Save image after copy。
-- **仍提示 image.png 重名？**  
-  粘贴前等待本程序更新剪贴板。
+- **Win+V 只有文件夹路径，没有图片缩略图？**  
+  Flameshot 保存到 `C:\Users\你\Pictures\Flameshot`，但监视文件夹填的是 `C:\Users\你\Pictures` —— 必须完全一致。Flameshot **Ctrl+C** 后，先确认该目录里出现了新的 `.png` 再粘贴。
+
+- **Flameshot Ctrl+C 后，托盘没有「已更新剪贴板」？**  
+  打开 Flameshot → 设置，开启 **Save image after copy（复制后保存）**。未开启时 Flameshot 只写剪贴板、不落盘，本程序监视不到新文件。
+
+- **Flameshot 目录里已有新 PNG，程序仍无反应？**  
+  确认 **Use fixed path for screenshots to save（固定保存路径）** 已开启，并核对两处路径：
+  - Flameshot：设置里的保存路径（或 `%APPDATA%\flameshot\flameshot.ini` 中的 `savePath`）
+  - 本程序：设置 → 监视文件夹  
+  两处必须是同一个文件夹。
+
+- **Cursor / 浏览器仍提示 `image.png` 已存在？**  
+  Flameshot **Ctrl+C** → 等待托盘显示「已更新剪贴板：2025-08-27_12-30-45.png」→ 再 **Ctrl+V**。贴太快时用的还是 Flameshot 原来的剪贴板（`image.png`）。
+
+- **截图很大，Win+V 没有预览？**  
+  超过约 15 MB 的文件可能只写入文件引用、不写图片预览。PNG 仍在 Flameshot 保存目录中，可直接粘贴或附加该文件。
 
 ## 项目结构
 
