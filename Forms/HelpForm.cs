@@ -133,7 +133,7 @@ set the watch folder to that path — not Pictures or Screenshots.
 [App settings]
 1. Tray right-click → Settings → confirm watch folder
 2. On first run, savePath is read from flameshot.ini when possible
-3. Optional: Start at login, Hide tray icon
+3. Optional: Start with Windows, Hide tray icon
 4. When the tray is hidden, the app keeps watching; run the exe again to open Settings
 5. Config file:
    %LOCALAPPDATA%\FlameshotClipboardHelper\settings.json

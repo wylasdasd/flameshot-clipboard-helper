@@ -79,7 +79,7 @@ Tray right-click → **Settings…**
 | Option | Description |
 |--------|-------------|
 | Watch folder | Screenshot save directory to monitor (`*.png`) |
-| Start at login | Launch after sign-in |
+| Start with Windows | Launch automatically when Windows starts |
 | Hide tray icon | Run in background without a tray icon; run exe again to open Settings |
 | Language | Auto / 中文 / English |
 

@@ -77,7 +77,7 @@ dotnet publish -c Release -r win-x64 --self-contained true `
 | 选项 | 说明 |
 |------|------|
 | 监视文件夹 | 要监视的截图保存目录（`*.png`） |
-| 开机自启 | 登录后自动启动 |
+| 开机自启 | 系统启动 Windows 后自动运行 |
 | 不显示托盘图标 | 后台运行无托盘；再次运行 exe 打开设置 |
 | 语言 | 自动 / 中文 / English |
 
