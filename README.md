@@ -136,4 +136,4 @@ Program.cs     Entry point
 
 ## License
 
-Use and modify as you like for personal use.
+MIT
