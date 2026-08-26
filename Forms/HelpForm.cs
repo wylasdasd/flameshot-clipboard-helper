@@ -74,8 +74,9 @@ Flameshot Ctrl+C → 保存 xxx.png 到磁盘
 【本程序设置】
 1. 托盘右键 → 设置 → 确认监视文件夹
 2. 首次运行会尝试读取 flameshot.ini 里的 savePath
-3. 可勾选「开机自启」
-4. 配置保存在：
+3. 可勾选「开机自启」「不显示托盘图标」
+4. 隐藏托盘后程序仍在后台监视；再次运行 exe 可打开设置
+5. 配置保存在：
    %LOCALAPPDATA%\FlameshotClipboardHelper\settings.json
 
 【日常使用】
@@ -132,8 +133,9 @@ set the watch folder to that path — not Pictures or Screenshots.
 [App settings]
 1. Tray right-click → Settings → confirm watch folder
 2. On first run, savePath is read from flameshot.ini when possible
-3. Optional: Start at login
-4. Config file:
+3. Optional: Start at login, Hide tray icon
+4. When the tray is hidden, the app keeps watching; run the exe again to open Settings
+5. Config file:
    %LOCALAPPDATA%\FlameshotClipboardHelper\settings.json
 
 [Daily use]

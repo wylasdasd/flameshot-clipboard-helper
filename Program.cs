@@ -8,6 +8,10 @@ internal static class Program
     private static void Main()
     {
         ApplicationConfiguration.Initialize();
+
+        if (!SingleInstance.TryBecomePrimary())
+            return;
+
         Application.Run(new TrayApplicationContext());
     }
 }

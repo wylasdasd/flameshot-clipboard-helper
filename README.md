@@ -23,7 +23,7 @@ With Flameshot, **Ctrl+C** after a capture often puts the same filename (`image.
 3. **Ctrl+V** in the target app pastes the image with a distinct name each time.
 
 ```
-Flameshot: capture → Ctrl+C → saves 2025-08-27_12-30-45.png
+Flameshot: capture → Ctrl+S → saves 2025-08-27_12-30-45.png
         ↓
 This app (folder watch only) sees the new file
         ↓
@@ -55,10 +55,22 @@ On first run, the app tries to read `savePath` from `%APPDATA%\flameshot\flamesh
 
 ## Build & run
 
+Requires [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) and Windows.
+
 ```powershell
 dotnet build -c Release
 .\bin\Release\net8.0-windows\FlameshotClipboardHelper.exe
 ```
+
+### Publish (single-file, no .NET install needed)
+
+```powershell
+dotnet publish -c Release -r win-x64 --self-contained true `
+  -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true `
+  -o publish/win-x64
+```
+
+Output: `publish/win-x64\FlameshotClipboardHelper.exe`
 
 ## Settings
 
@@ -68,6 +80,7 @@ Tray right-click → **Settings…**
 |--------|-------------|
 | Watch folder | Screenshot save directory to monitor (`*.png`) |
 | Start at login | Launch after sign-in |
+| Hide tray icon | Run in background without a tray icon; edit `settings.json` to show the tray again (see FAQ) |
 | Language | Auto / 中文 / English |
 
 Config: `%LOCALAPPDATA%\FlameshotClipboardHelper\settings.json`
@@ -98,6 +111,15 @@ Config: `%LOCALAPPDATA%\FlameshotClipboardHelper\settings.json`
 
 - **Screenshot is huge and Win+V has no preview?**  
   Files over ~15 MB may get a file reference only (no image preview). The PNG is still under Flameshot's save folder; paste or attach the file directly.
+
+- **Tray icon hidden — how do I show it again?**  
+  While hidden, there is no tray menu. Edit `%LOCALAPPDATA%\FlameshotClipboardHelper\settings.json`:
+
+  ```json
+  "HideTrayIcon": false
+  ```
+
+  Then **restart the app** (end `FlameshotClipboardHelper.exe` in Task Manager, then run it again). The tray icon comes back.
 
 ## Project layout
 

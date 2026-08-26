@@ -14,6 +14,8 @@ internal sealed class AppSettings
 
     public bool StartAtLogin { get; set; }
 
+    public bool HideTrayIcon { get; set; }
+
     /// <summary>auto, zh-CN, or en</summary>
     public string Language { get; set; } = "auto";
 

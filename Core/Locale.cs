@@ -61,6 +61,10 @@ internal static class L
     public static string Close => T("关闭", "Close");
     public static string Browse => T("浏览…", "Browse…");
     public static string StartAtLogin => T("开机自启", "Start at login");
+    public static string HideTrayIcon => T("不显示托盘图标", "Hide tray icon");
+    public static string HideTrayHint => T(
+        "隐藏后程序仍在后台监视；再次运行 exe 可打开设置",
+        "App keeps watching in background; run the exe again to open Settings");
     public static string Save => T("保存", "Save");
     public static string Cancel => T("取消", "Cancel");
     public static string LanguageLabel => T("语言：", "Language:");

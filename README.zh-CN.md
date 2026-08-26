@@ -23,7 +23,7 @@ Flameshot 截图后按 **Ctrl+C**，剪贴板里的文件名经常是同一个�
 3. 在目标处 **Ctrl+V** 即可粘贴，每次文件名不同。
 
 ```
-Flameshot：截图 → Ctrl+C → 保存 2025-08-27_12-30-45.png
+Flameshot：截图 → Ctrl+S → 保存 2025-08-27_12-30-45.png
         ↓
 本程序（仅监视目录）发现新文件
         ↓
@@ -60,6 +60,16 @@ dotnet build -c Release
 .\bin\Release\net8.0-windows\FlameshotClipboardHelper.exe
 ```
 
+### 发布（单文件，无需安装 .NET）
+
+```powershell
+dotnet publish -c Release -r win-x64 --self-contained true `
+  -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true `
+  -o publish/win-x64
+```
+
+输出：`publish/win-x64\FlameshotClipboardHelper.exe`
+
 ## 设置
 
 托盘右键 → **设置…**
@@ -68,6 +78,7 @@ dotnet build -c Release
 |------|------|
 | 监视文件夹 | 要监视的截图保存目录（`*.png`） |
 | 开机自启 | 登录后自动启动 |
+| 不显示托盘图标 | 后台运行无托盘；恢复托盘需编辑 `settings.json`（见常见问题） |
 | 语言 | 自动 / 中文 / English |
 
 配置：`%LOCALAPPDATA%\FlameshotClipboardHelper\settings.json`
@@ -98,6 +109,15 @@ dotnet build -c Release
 
 - **截图很大，Win+V 没有预览？**  
   超过约 15 MB 的文件可能只写入文件引用、不写图片预览。PNG 仍在 Flameshot 保存目录中，可直接粘贴或附加该文件。
+
+- **隐藏托盘后，怎么重新显示？**  
+  隐藏后没有托盘菜单，需编辑 `%LOCALAPPDATA%\FlameshotClipboardHelper\settings.json`：
+
+  ```json
+  "HideTrayIcon": false
+  ```
+
+  然后 **重启程序**（任务管理器结束 `FlameshotClipboardHelper.exe`，再重新运行）。托盘图标会恢复。
 
 ## 项目结构
 

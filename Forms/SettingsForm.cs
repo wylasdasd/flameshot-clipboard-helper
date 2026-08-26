@@ -4,6 +4,7 @@ internal sealed class SettingsForm : Form
 {
     private readonly TextBox _folderBox;
     private readonly CheckBox _startupBox;
+    private readonly CheckBox _hideTrayBox;
     private readonly ComboBox _languageBox;
     private readonly AppSettings _settings;
 
@@ -19,7 +20,7 @@ internal sealed class SettingsForm : Form
         MaximizeBox = false;
         MinimizeBox = false;
         StartPosition = FormStartPosition.CenterScreen;
-        ClientSize = new Size(460, 200);
+        ClientSize = new Size(460, 228);
 
         var folderLabel = new Label
         {
@@ -51,17 +52,25 @@ internal sealed class SettingsForm : Form
             Checked = settings.StartAtLogin,
         };
 
+        _hideTrayBox = new CheckBox
+        {
+            Text = L.HideTrayIcon,
+            AutoSize = true,
+            Location = new Point(12, 102),
+            Checked = settings.HideTrayIcon,
+        };
+
         var languageLabel = new Label
         {
             Text = L.LanguageLabel,
             AutoSize = true,
-            Location = new Point(12, 104),
+            Location = new Point(12, 128),
         };
 
         _languageBox = new ComboBox
         {
             DropDownStyle = ComboBoxStyle.DropDownList,
-            Location = new Point(60, 100),
+            Location = new Point(60, 124),
             Width = 160,
         };
         var languageItems = new LanguageItem[]
@@ -80,13 +89,13 @@ internal sealed class SettingsForm : Form
             Text = L.SettingsHint,
             AutoSize = true,
             ForeColor = SystemColors.GrayText,
-            Location = new Point(12, 130),
+            Location = new Point(12, 154),
         };
 
         var help = new Button
         {
             Text = L.MenuHelp,
-            Location = new Point(12, 160),
+            Location = new Point(12, 188),
             Width = 75,
         };
         help.Click += (_, _) =>
@@ -99,7 +108,7 @@ internal sealed class SettingsForm : Form
         {
             Text = L.Save,
             DialogResult = DialogResult.OK,
-            Location = new Point(292, 160),
+            Location = new Point(292, 188),
             Width = 75,
         };
 
@@ -107,7 +116,7 @@ internal sealed class SettingsForm : Form
         {
             Text = L.Cancel,
             DialogResult = DialogResult.Cancel,
-            Location = new Point(373, 160),
+            Location = new Point(373, 188),
             Width = 75,
         };
 
@@ -115,7 +124,7 @@ internal sealed class SettingsForm : Form
         CancelButton = cancel;
 
         Controls.AddRange([
-            folderLabel, _folderBox, browse, _startupBox,
+            folderLabel, _folderBox, browse, _startupBox, _hideTrayBox,
             languageLabel, _languageBox, hint, help, save, cancel,
         ]);
     }
@@ -138,6 +147,7 @@ internal sealed class SettingsForm : Form
 
         _settings.WatchFolder = folder;
         _settings.StartAtLogin = _startupBox.Checked;
+        _settings.HideTrayIcon = _hideTrayBox.Checked;
         _settings.Language = Locale.ToCode(((LanguageItem)_languageBox.SelectedItem!).Language);
         base.OnFormClosing(e);
     }
