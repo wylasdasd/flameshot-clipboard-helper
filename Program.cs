@@ -10,7 +10,11 @@ internal static class Program
         ApplicationConfiguration.Initialize();
 
         if (!SingleInstance.TryBecomePrimary())
+        {
+            if (!SingleInstance.TrySignalOpenSettings())
+                SingleInstance.ShowAlreadyRunningMessage();
             return;
+        }
 
         Application.Run(new TrayApplicationContext());
     }

@@ -80,7 +80,7 @@ Tray right-click → **Settings…**
 |--------|-------------|
 | Watch folder | Screenshot save directory to monitor (`*.png`) |
 | Start at login | Launch after sign-in |
-| Hide tray icon | Run in background without a tray icon; edit `settings.json` to show the tray again (see FAQ) |
+| Hide tray icon | Run in background without a tray icon; run exe again to open Settings |
 | Language | Auto / 中文 / English |
 
 Config: `%LOCALAPPDATA%\FlameshotClipboardHelper\settings.json`
@@ -112,14 +112,18 @@ Config: `%LOCALAPPDATA%\FlameshotClipboardHelper\settings.json`
 - **Screenshot is huge and Win+V has no preview?**  
   Files over ~15 MB may get a file reference only (no image preview). The PNG is still under Flameshot's save folder; paste or attach the file directly.
 
-- **Tray icon hidden — how do I show it again?**  
-  While hidden, there is no tray menu. Edit `%LOCALAPPDATA%\FlameshotClipboardHelper\settings.json`:
+- **Tray icon hidden — how do I open Settings or show the tray again?**  
+  Only one instance runs. While the tray is hidden, **run `FlameshotClipboardHelper.exe` again** — the running instance opens Settings (no second process). Uncheck **Hide tray icon** → **Save**.
 
-  ```json
-  "HideTrayIcon": false
+  If that fails, edit `%LOCALAPPDATA%\FlameshotClipboardHelper\settings.json`, set `"HideTrayIcon": false`, then restart:
+
+  ```powershell
+  taskkill /IM FlameshotClipboardHelper.exe /F
+  .\FlameshotClipboardHelper.exe
   ```
 
-  Then **restart the app** (end `FlameshotClipboardHelper.exe` in Task Manager, then run it again). The tray icon comes back.
+- **Launched twice while the tray is visible?**  
+  The second launch opens Settings on the existing instance and exits immediately.
 
 ## Project layout
 

@@ -14,13 +14,13 @@ internal sealed class SettingsForm : Form
     {
         _settings = settings;
 
-        Text = L.AppTitle;
+        Text = $"{L.AppTitle}  v{AppInfo.Version}";
         Icon = AppIcon.Tray;
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         MinimizeBox = false;
         StartPosition = FormStartPosition.CenterScreen;
-        ClientSize = new Size(460, 228);
+        ClientSize = new Size(460, 240);
 
         var folderLabel = new Label
         {
@@ -63,15 +63,19 @@ internal sealed class SettingsForm : Form
         var languageLabel = new Label
         {
             Text = L.LanguageLabel,
-            AutoSize = true,
-            Location = new Point(12, 128),
+            AutoSize = false,
+            Size = new Size(76, 23),
+            TextAlign = ContentAlignment.MiddleLeft,
+            Location = new Point(12, 126),
         };
 
         _languageBox = new ComboBox
         {
             DropDownStyle = ComboBoxStyle.DropDownList,
-            Location = new Point(60, 124),
-            Width = 160,
+            Location = new Point(92, 124),
+            Width = 200,
+            IntegralHeight = false,
+            DropDownWidth = 220,
         };
         var languageItems = new LanguageItem[]
         {
@@ -87,15 +91,24 @@ internal sealed class SettingsForm : Form
         var hint = new Label
         {
             Text = L.SettingsHint,
-            AutoSize = true,
+            AutoSize = false,
+            Size = new Size(436, 32),
             ForeColor = SystemColors.GrayText,
             Location = new Point(12, 154),
+        };
+
+        var version = new Label
+        {
+            Text = $"v{AppInfo.Version}",
+            AutoSize = true,
+            ForeColor = SystemColors.GrayText,
+            Location = new Point(12, 192),
         };
 
         var help = new Button
         {
             Text = L.MenuHelp,
-            Location = new Point(12, 188),
+            Location = new Point(12, 200),
             Width = 75,
         };
         help.Click += (_, _) =>
@@ -108,7 +121,7 @@ internal sealed class SettingsForm : Form
         {
             Text = L.Save,
             DialogResult = DialogResult.OK,
-            Location = new Point(292, 188),
+            Location = new Point(292, 200),
             Width = 75,
         };
 
@@ -116,7 +129,7 @@ internal sealed class SettingsForm : Form
         {
             Text = L.Cancel,
             DialogResult = DialogResult.Cancel,
-            Location = new Point(373, 188),
+            Location = new Point(373, 200),
             Width = 75,
         };
 
@@ -125,7 +138,7 @@ internal sealed class SettingsForm : Form
 
         Controls.AddRange([
             folderLabel, _folderBox, browse, _startupBox, _hideTrayBox,
-            languageLabel, _languageBox, hint, help, save, cancel,
+            languageLabel, _languageBox, hint, version, help, save, cancel,
         ]);
     }
 

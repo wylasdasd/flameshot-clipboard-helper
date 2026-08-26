@@ -8,6 +8,7 @@
     <AssemblyName>FlameshotClipboardHelper</AssemblyName>
     <RootNamespace>FlameshotClipboardHelper</RootNamespace>
     <ApplicationIcon>app.ico</ApplicationIcon>
+    <Version>1.0.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="app.ico">

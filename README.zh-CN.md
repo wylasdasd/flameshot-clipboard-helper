@@ -78,7 +78,7 @@ dotnet publish -c Release -r win-x64 --self-contained true `
 |------|------|
 | 监视文件夹 | 要监视的截图保存目录（`*.png`） |
 | 开机自启 | 登录后自动启动 |
-| 不显示托盘图标 | 后台运行无托盘；恢复托盘需编辑 `settings.json`（见常见问题） |
+| 不显示托盘图标 | 后台运行无托盘；再次运行 exe 打开设置 |
 | 语言 | 自动 / 中文 / English |
 
 配置：`%LOCALAPPDATA%\FlameshotClipboardHelper\settings.json`
@@ -110,14 +110,18 @@ dotnet publish -c Release -r win-x64 --self-contained true `
 - **截图很大，Win+V 没有预览？**  
   超过约 15 MB 的文件可能只写入文件引用、不写图片预览。PNG 仍在 Flameshot 保存目录中，可直接粘贴或附加该文件。
 
-- **隐藏托盘后，怎么重新显示？**  
-  隐藏后没有托盘菜单，需编辑 `%LOCALAPPDATA%\FlameshotClipboardHelper\settings.json`：
+- **隐藏托盘后，怎么打开设置或恢复托盘？**  
+  程序只允许运行一个实例。托盘隐藏后 **再运行一次 `FlameshotClipboardHelper.exe`** —— 已在运行的实例会弹出设置（不会启动第二个进程）。取消勾选 **不显示托盘图标** → **保存** 即可。
 
-  ```json
-  "HideTrayIcon": false
+  若无效，编辑 `%LOCALAPPDATA%\FlameshotClipboardHelper\settings.json`，将 `"HideTrayIcon"` 改为 `false` 后重启：
+
+  ```powershell
+  taskkill /IM FlameshotClipboardHelper.exe /F
+  .\FlameshotClipboardHelper.exe
   ```
 
-  然后 **重启程序**（任务管理器结束 `FlameshotClipboardHelper.exe`，再重新运行）。托盘图标会恢复。
+- **托盘可见时重复运行 exe？**  
+  第二次运行会让已有实例打开设置窗口，然后立即退出。
 
 ## 项目结构
 

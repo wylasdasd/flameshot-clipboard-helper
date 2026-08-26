@@ -65,6 +65,9 @@ internal static class L
     public static string HideTrayHint => T(
         "隐藏后程序仍在后台监视；再次运行 exe 可打开设置",
         "App keeps watching in background; run the exe again to open Settings");
+    public static string AlreadyRunning => T(
+        "程序已在运行，无法打开设置。",
+        "Already running, but could not open Settings.");
     public static string Save => T("保存", "Save");
     public static string Cancel => T("取消", "Cancel");
     public static string LanguageLabel => T("语言：", "Language:");
