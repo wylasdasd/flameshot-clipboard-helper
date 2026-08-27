@@ -1,17 +1,12 @@
-using System.Collections.Specialized;
 using System.Runtime.InteropServices;
 
-namespace FlameshotClipboardHelper;
+namespace FlameshotClipboardHelper.Core;
 
-internal static class ClipboardHelper
+internal static class ScreenshotClipboardService
 {
     private static readonly object Gate = new();
 
-    // lazy: skip bitmap for huge files to avoid OOM; file-drop still gives unique paste name
-    private const long MaxBitmapFileBytes = 15 * 1024 * 1024;
-    private const long MaxPixelCount = 3840L * 2160L;
-
-    public static bool TryPushScreenshot(string filePath)
+    public static bool TryPush(string filePath, IClipboardWriter writer)
     {
         filePath = Path.GetFullPath(filePath);
         if (!filePath.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
@@ -26,9 +21,8 @@ internal static class ClipboardHelper
             {
                 try
                 {
-                    var data = BuildClipboardData(filePath);
-                    Clipboard.SetDataObject(data, copy: true);
-                    return true;
+                    if (writer.TryPushScreenshot(filePath))
+                        return true;
                 }
                 catch (IOException) when (attempt < 5)
                 {
@@ -44,59 +38,9 @@ internal static class ClipboardHelper
                     Thread.Sleep(100);
                 }
             }
-
-            try
-            {
-                Clipboard.SetDataObject(BuildFileDropOnly(filePath), copy: true);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
         }
-    }
 
-    private static DataObject BuildClipboardData(string filePath)
-    {
-        var data = BuildFileDropOnly(filePath);
-        TryAddImage(data, filePath);
-        return data;
-    }
-
-    private static DataObject BuildFileDropOnly(string filePath)
-    {
-        var data = new DataObject();
-        var files = new StringCollection();
-        files.Add(filePath);
-        data.SetFileDropList(files);
-        return data;
-    }
-
-    private static void TryAddImage(DataObject data, string filePath)
-    {
-        var length = new FileInfo(filePath).Length;
-        if (length <= 0 || length > MaxBitmapFileBytes)
-            return;
-
-        try
-        {
-            var bytes = File.ReadAllBytes(filePath);
-            using var ms = new MemoryStream(bytes);
-            using var img = Image.FromStream(ms);
-            if ((long)img.Width * img.Height > MaxPixelCount)
-                return;
-
-            data.SetImage(new Bitmap(img));
-        }
-        catch (OutOfMemoryException)
-        {
-            // File reference alone is still usable.
-        }
-        catch (ArgumentException)
-        {
-            // PNG not fully written yet; retry loop handles that.
-        }
+        return false;
     }
 
     private static bool WaitForStableFile(string filePath)

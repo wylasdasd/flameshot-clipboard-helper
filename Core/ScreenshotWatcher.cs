@@ -1,17 +1,18 @@
-namespace FlameshotClipboardHelper;
+namespace FlameshotClipboardHelper.Core;
 
 internal sealed class ScreenshotWatcher : IDisposable
 {
-    private readonly Control _ui;
-    private readonly Action<string, bool> _onPushed;
+    private readonly Action<Action> _marshalToUi;
+    private readonly Action<string> _onDetected;
     private FileSystemWatcher? _watcher;
     private readonly Dictionary<string, DateTime> _recent = new(StringComparer.OrdinalIgnoreCase);
-    private readonly Dictionary<string, System.Windows.Forms.Timer> _debounce = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, System.Threading.Timer> _debounce = new(StringComparer.OrdinalIgnoreCase);
+    private readonly object _debounceGate = new();
 
-    public ScreenshotWatcher(Control ui, Action<string, bool> onPushed)
+    public ScreenshotWatcher(Action<Action> marshalToUi, Action<string> onDetected)
     {
-        _ui = ui;
-        _onPushed = onPushed;
+        _marshalToUi = marshalToUi;
+        _onDetected = onDetected;
     }
 
     public void Start(string watchFolder)
@@ -33,13 +34,12 @@ internal sealed class ScreenshotWatcher : IDisposable
 
     public void Stop()
     {
-        foreach (var timer in _debounce.Values)
+        lock (_debounceGate)
         {
-            timer.Stop();
-            timer.Dispose();
+            foreach (var timer in _debounce.Values)
+                timer.Dispose();
+            _debounce.Clear();
         }
-
-        _debounce.Clear();
 
         if (_watcher is null)
             return;
@@ -60,34 +60,40 @@ internal sealed class ScreenshotWatcher : IDisposable
         if (!path.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
             return;
 
-        _ui.BeginInvoke(() => SchedulePush(path));
+        _marshalToUi(() => SchedulePush(path));
     }
 
     private void SchedulePush(string path)
     {
-        if (_debounce.TryGetValue(path, out var existing))
+        lock (_debounceGate)
         {
-            existing.Stop();
-            existing.Start();
-            return;
+            if (_debounce.TryGetValue(path, out var existing))
+            {
+                existing.Change(350, Timeout.Infinite);
+                return;
+            }
+
+            var timer = new System.Threading.Timer(_ =>
+            {
+                _marshalToUi(() => CompletePush(path));
+            }, null, 350, Timeout.Infinite);
+
+            _debounce[path] = timer;
+        }
+    }
+
+    private void CompletePush(string path)
+    {
+        lock (_debounceGate)
+        {
+            if (_debounce.Remove(path, out var timer))
+                timer.Dispose();
         }
 
-        var timer = new System.Windows.Forms.Timer { Interval = 350 };
-        timer.Tick += (_, _) =>
-        {
-            timer.Stop();
-            timer.Dispose();
-            _debounce.Remove(path);
+        if (ShouldSkip(path))
+            return;
 
-            if (ShouldSkip(path))
-                return;
-
-            var ok = ClipboardHelper.TryPushScreenshot(path);
-            _onPushed(path, ok);
-        };
-
-        _debounce[path] = timer;
-        timer.Start();
+        _onDetected(path);
     }
 
     private bool ShouldSkip(string path)

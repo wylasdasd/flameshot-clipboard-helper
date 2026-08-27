@@ -49,20 +49,31 @@ On first run, the app tries to read `savePath` from `%APPDATA%\flameshot\flamesh
 
 ## Requirements
 
-- **Windows 10/11** (WinForms tray app; no macOS or Linux)
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) to build
+- **Windows 10/11** (Avalonia tray app; no macOS or Linux)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) to build
 - A screenshot tool that saves PNGs to a fixed folder on copy (Flameshot shown above)
 
 ## Build & run
 
-Requires [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) and Windows.
+Requires [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) and Windows.
 
 ```powershell
 dotnet build -c Release
-.\bin\Release\net8.0-windows\FlameshotClipboardHelper.exe
+.\bin\Release\net10.0-windows\FlameshotClipboardHelper.exe
 ```
 
-### Publish (single-file, no .NET install needed)
+### Publish (Native AOT, single-file, no .NET install)
+
+```powershell
+dotnet publish -c Release -r win-x64 `
+  -p:PublishAot=true `
+  -p:OptimizationPreference=Size `
+  -o publish/win-x64-aot
+```
+
+Output: `publish/win-x64-aot\FlameshotClipboardHelper.exe` (~15–25 MB)
+
+### Publish (self-contained single-file, non-AOT)
 
 ```powershell
 dotnet publish -c Release -r win-x64 --self-contained true `
@@ -128,9 +139,8 @@ Config: `%LOCALAPPDATA%\FlameshotClipboardHelper\settings.json`
 ## Project layout
 
 ```
-Core/          Settings, clipboard logic, folder watcher
-Forms/         Help and settings dialogs
-Tray/          System tray
+Core/          Business logic (settings, watcher, clipboard orchestration); no UI
+Ui/            Avalonia UI (tray, settings, help) and platform clipboard adapter
 Program.cs     Entry point
 ```
 

@@ -1,43 +1,4 @@
-namespace FlameshotClipboardHelper.Forms;
-
-internal sealed class HelpForm : Form
-{
-    public HelpForm()
-    {
-        Text = L.HelpTitle;
-        FormBorderStyle = FormBorderStyle.FixedDialog;
-        MaximizeBox = false;
-        MinimizeBox = false;
-        StartPosition = FormStartPosition.CenterScreen;
-        ClientSize = new Size(540, 480);
-        Icon = AppIcon.Tray;
-
-        var text = new TextBox
-        {
-            Multiline = true,
-            ReadOnly = true,
-            ScrollBars = ScrollBars.Vertical,
-            BorderStyle = BorderStyle.None,
-            BackColor = SystemColors.Window,
-            Font = new Font(Locale.IsChinese ? "Microsoft YaHei UI" : "Segoe UI", 9.5f),
-            Location = new Point(12, 12),
-            Size = new Size(516, 420),
-            Text = Locale.IsChinese ? HelpText.Zh : HelpText.En,
-        };
-
-        var close = new Button
-        {
-            Text = L.Close,
-            DialogResult = DialogResult.OK,
-            Location = new Point(453, 442),
-            Width = 75,
-        };
-
-        AcceptButton = close;
-        Controls.Add(text);
-        Controls.Add(close);
-    }
-}
+namespace FlameshotClipboardHelper.Core;
 
 internal static class HelpText
 {

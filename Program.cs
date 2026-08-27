@@ -1,21 +1,27 @@
-using FlameshotClipboardHelper.Tray;
+using Avalonia;
+using FlameshotClipboardHelper.Core;
+using FlameshotClipboardHelper.Ui;
 
 namespace FlameshotClipboardHelper;
 
 internal static class Program
 {
     [STAThread]
-    private static void Main()
+    public static void Main(string[] args)
     {
-        ApplicationConfiguration.Initialize();
-
         if (!SingleInstance.TryBecomePrimary())
         {
             if (!SingleInstance.TrySignalOpenSettings())
-                SingleInstance.ShowAlreadyRunningMessage();
+                NativeMessageBox.ShowInfo(SingleInstance.GetAlreadyRunningMessage(), L.AppTitle);
             return;
         }
 
-        Application.Run(new TrayApplicationContext());
+        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }
+
+    public static AppBuilder BuildAvaloniaApp()
+        => AppBuilder.Configure<App>()
+            .UsePlatformDetect()
+            .WithInterFont()
+            .LogToTrace();
 }

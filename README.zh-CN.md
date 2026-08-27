@@ -49,18 +49,29 @@ Flameshot：截图 → Ctrl+S → 保存 2025-08-27_12-30-45.png
 
 ## 运行环境
 
-- **Windows 10/11**（WinForms 托盘程序，不支持 macOS / Linux）
-- 构建需要 [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- **Windows 10/11**（Avalonia 托盘程序，不支持 macOS / Linux）
+- 构建需要 [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - 需要一款在复制时将 PNG 保存到固定目录的截图工具（下文以 Flameshot 为例）
 
 ## 构建与运行
 
 ```powershell
 dotnet build -c Release
-.\bin\Release\net8.0-windows\FlameshotClipboardHelper.exe
+.\bin\Release\net10.0-windows\FlameshotClipboardHelper.exe
 ```
 
-### 发布（单文件，无需安装 .NET）
+### 发布（Native AOT，单文件，无需安装 .NET）
+
+```powershell
+dotnet publish -c Release -r win-x64 `
+  -p:PublishAot=true `
+  -p:OptimizationPreference=Size `
+  -o publish/win-x64-aot
+```
+
+输出：`publish/win-x64-aot\FlameshotClipboardHelper.exe`（约 15–25 MB）
+
+### 发布（自包含单文件，非 AOT）
 
 ```powershell
 dotnet publish -c Release -r win-x64 --self-contained true `
@@ -126,9 +137,8 @@ dotnet publish -c Release -r win-x64 --self-contained true `
 ## 项目结构
 
 ```
-Core/          设置、剪贴板逻辑、文件夹监视
-Forms/         使用说明与设置窗口
-Tray/          系统托盘
+Core/          业务逻辑（设置、监视、剪贴板编排），不依赖 UI
+Ui/            Avalonia 界面（托盘、设置、帮助）与平台剪贴板实现
 Program.cs     入口
 ```
 

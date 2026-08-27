@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace FlameshotClipboardHelper;
+namespace FlameshotClipboardHelper.Core;
 
 internal enum AppLanguage
 {

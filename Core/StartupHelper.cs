@@ -1,6 +1,6 @@
 using Microsoft.Win32;
 
-namespace FlameshotClipboardHelper;
+namespace FlameshotClipboardHelper.Core;
 
 internal static class StartupHelper
 {
@@ -18,7 +18,8 @@ internal static class StartupHelper
             return;
         }
 
-        var exe = Application.ExecutablePath;
+        var exe = Environment.ProcessPath
+            ?? throw new InvalidOperationException("Cannot resolve executable path.");
         key.SetValue(ValueName, $"\"{exe}\"");
     }
 }

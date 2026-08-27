@@ -1,9 +1,9 @@
 using System.Reflection;
 
-namespace FlameshotClipboardHelper;
+namespace FlameshotClipboardHelper.Core;
 
 internal static class AppInfo
 {
     public static string Version { get; } =
-        Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.0";
+        typeof(AppInfo).Assembly.GetName().Version?.ToString(3) ?? "2.0.0";
 }

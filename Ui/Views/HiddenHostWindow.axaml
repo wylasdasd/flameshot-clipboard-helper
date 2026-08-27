@@ -1,0 +1,11 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="FlameshotClipboardHelper.Ui.Views.HiddenHostWindow"
+        Title="FlameshotClipboardHelper"
+        Width="1"
+        Height="1"
+        ShowInTaskbar="False"
+        WindowState="Minimized"
+        Opacity="0"
+        CanResize="False"
+        WindowDecorations="None" />

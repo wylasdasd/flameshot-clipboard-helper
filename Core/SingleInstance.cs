@@ -1,4 +1,4 @@
-namespace FlameshotClipboardHelper;
+namespace FlameshotClipboardHelper.Core;
 
 internal static class SingleInstance
 {
@@ -41,10 +41,10 @@ internal static class SingleInstance
         return false;
     }
 
-    public static void ShowAlreadyRunningMessage()
+    public static string GetAlreadyRunningMessage()
     {
         var settings = AppSettings.Load();
         Locale.Apply(settings);
-        MessageBox.Show(L.AlreadyRunning, L.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        return L.AlreadyRunning;
     }
 }

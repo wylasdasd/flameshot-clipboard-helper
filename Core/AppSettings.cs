@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace FlameshotClipboardHelper;
+namespace FlameshotClipboardHelper.Core;
 
 internal sealed class AppSettings
 {
@@ -27,7 +27,7 @@ internal sealed class AppSettings
                 return new AppSettings();
 
             var json = File.ReadAllText(SettingsPath);
-            return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+            return JsonSerializer.Deserialize(json, AppJsonContext.Default.AppSettings) ?? new AppSettings();
         }
         catch
         {
@@ -40,7 +40,7 @@ internal sealed class AppSettings
         Directory.CreateDirectory(SettingsDir);
         Directory.CreateDirectory(WatchFolder);
 
-        var json = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
+        var json = JsonSerializer.Serialize(this, AppJsonContext.Default.AppSettings);
         File.WriteAllText(SettingsPath, json);
     }
 

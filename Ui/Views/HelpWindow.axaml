@@ -1,0 +1,24 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="FlameshotClipboardHelper.Ui.Views.HelpWindow"
+        Width="540"
+        Height="480"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen">
+  <Grid RowDefinitions="*,Auto" Margin="12">
+    <ScrollViewer Grid.Row="0">
+      <TextBox x:Name="HelpTextBox"
+               IsReadOnly="True"
+               AcceptsReturn="True"
+               TextWrapping="Wrap"
+               BorderThickness="0"
+               Background="Transparent" />
+    </ScrollViewer>
+    <Button Grid.Row="1"
+            x:Name="CloseButton"
+            HorizontalAlignment="Right"
+            Width="75"
+            Margin="0,12,0,0"
+            Click="OnCloseClick" />
+  </Grid>
+</Window>
