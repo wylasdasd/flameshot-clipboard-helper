@@ -13,6 +13,7 @@
 ## 要解决的问题（以 Flameshot 为例）
 
 Flameshot 截图后按 **Ctrl+C**，剪贴板里的文件名经常是同一个（`image.png`）。在 Cursor、浏览器、聊天里连续粘贴会失败或覆盖上一张。
+(截至2026.9.14  cursor 和 vscode copilot 该问题，由官方处理了。但在chrome gemini 仍旧有 这个问题)
 
 ## 本程序做什么
 
