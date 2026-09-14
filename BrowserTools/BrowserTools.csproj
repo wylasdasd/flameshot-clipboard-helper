@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\BrowserTools.props" />
+
+  <PropertyGroup>
+    <RootNamespace>BrowserTools</RootNamespace>
+    <AssemblyName>BrowserTools</AssemblyName>
+    <Description>BrowserTools domain and MCP/connector logic. No UI.</Description>
+  </PropertyGroup>
+</Project>

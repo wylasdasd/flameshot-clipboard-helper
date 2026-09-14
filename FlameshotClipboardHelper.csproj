@@ -13,6 +13,7 @@
     <PublishAot>true</PublishAot>
     <OptimizationPreference>Size</OptimizationPreference>
     <StripSymbols>true</StripSymbols>
+    <DefaultItemExcludes>$(DefaultItemExcludes);BrowserTools/**;BrowserTools.Host/**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>

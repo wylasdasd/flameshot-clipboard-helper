@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="FlameshotClipboardHelper.csproj" />
+  <Project Path="BrowserTools/BrowserTools.csproj" />
+  <Project Path="BrowserTools.Host/BrowserTools.Host.csproj" />
+</Solution>

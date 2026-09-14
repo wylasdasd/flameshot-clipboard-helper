@@ -137,9 +137,51 @@ dotnet publish -c Release -r win-x64 --self-contained true `
 ## 项目结构
 
 ```
-Core/          业务逻辑（设置、监视、剪贴板编排），不依赖 UI
-Ui/            Avalonia 界面（托盘、设置、帮助）与平台剪贴板实现
-Program.cs     入口
+Core/                  剪贴板助手业务逻辑，不依赖 UI
+Ui/                    Avalonia 托盘、设置、帮助
+Program.cs             剪贴板助手入口
+BrowserTools/          BrowserTools 领域与 MCP/连接器（AOT 类库）
+BrowserTools.Host/     薄 stdio 入口（`browser-tools-mcp.exe`）
+```
+
+## BrowserTools MCP（C#）
+
+本仓库还包含 [BrowserTools MCP](https://github.com/AgentDeskAI/browser-tools-mcp) **服务端**的 Native AOT 移植。Chrome 扩展仍是原版 JS；本进程只在 loopback 上做请求-响应转发。
+
+通过未打包扩展连接，**要检查的标签必须开着 F12**。典型能力：console/网络缓冲、Elements 面板里选中的节点、浏览器 storage。
+
+### 环境
+
+- Windows，[.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+- 从上游仓库加载 `chrome-extension` 未打包扩展
+- 要检查的标签必须打开 DevTools（F12）
+
+关掉 F12 就会断线。最小化或切到后台也可能断：连接器每 15 秒 ping 一次，连续两次没有 pong 就断开（Chrome 会节流后台定时器）。再开 F12 即可重连。
+
+### 构建与发布 Host
+
+```powershell
+dotnet publish BrowserTools.Host -c Release -r win-x64 -p:PublishAot=true
+```
+
+输出：`BrowserTools.Host\bin\Release\net10.0\win-x64\publish\browser-tools-mcp.exe`
+
+检查环境（信息打在 stderr）：
+
+```powershell
+.\browser-tools-mcp.exe --doctor
+```
+
+### Cursor
+
+```json
+{
+  "mcpServers": {
+    "browser-tools": {
+      "command": "C:/path/to/browser-tools-mcp.exe"
+    }
+  }
+}
 ```
 
 ## 许可

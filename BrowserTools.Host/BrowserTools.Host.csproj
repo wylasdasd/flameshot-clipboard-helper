@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\BrowserTools.props" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>BrowserTools.Host</RootNamespace>
+    <AssemblyName>browser-tools-mcp</AssemblyName>
+    <Description>Thin stdio host for BrowserTools MCP. All logic lives in the BrowserTools class library.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BrowserTools\BrowserTools.csproj" />
+  </ItemGroup>
+</Project>

@@ -139,9 +139,51 @@ Config: `%LOCALAPPDATA%\FlameshotClipboardHelper\settings.json`
 ## Project layout
 
 ```
-Core/          Business logic (settings, watcher, clipboard orchestration); no UI
-Ui/            Avalonia UI (tray, settings, help) and platform clipboard adapter
-Program.cs     Entry point
+Core/                  Clipboard-helper business logic; no UI
+Ui/                    Avalonia tray, settings, help
+Program.cs             Clipboard-helper entry
+BrowserTools/          BrowserTools domain + MCP/connector (AOT class library)
+BrowserTools.Host/     Thin stdio host (`browser-tools-mcp.exe`)
+```
+
+## BrowserTools MCP (C#)
+
+This repo also contains a **Native AOT** port of the [BrowserTools MCP](https://github.com/AgentDeskAI/browser-tools-mcp) **server**. The Chrome extension stays the original JavaScript; this process only forwards requests on loopback.
+
+It attaches through an unpacked extension. **F12 must stay open** on the tab you want inspected. Typical tools: console and network buffers, the element selected in the Elements panel, and browser storage.
+
+### Requirements
+
+- Windows, [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+- Chrome extension from the upstream `chrome-extension` folder (load unpacked)
+- DevTools (F12) open on the tab you want inspected
+
+Closing DevTools disconnects. Minimizing Chrome or leaving it in the background can also drop the socket: the connector pings every 15s and aborts after two missed pongs (Chrome throttles timers in background windows). Re-open F12 to reconnect.
+
+### Build & publish the host
+
+```powershell
+dotnet publish BrowserTools.Host -c Release -r win-x64 -p:PublishAot=true
+```
+
+Output: `BrowserTools.Host\bin\Release\net10.0\win-x64\publish\browser-tools-mcp.exe`
+
+Check setup (stderr):
+
+```powershell
+.\browser-tools-mcp.exe --doctor
+```
+
+### Cursor
+
+```json
+{
+  "mcpServers": {
+    "browser-tools": {
+      "command": "C:/path/to/browser-tools-mcp.exe"
+    }
+  }
+}
 ```
 
 ## License
