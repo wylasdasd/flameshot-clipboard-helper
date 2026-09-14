@@ -13,6 +13,7 @@ It does **not** hook the keyboard, capture screenshots, or talk to Flameshot dir
 ## The problem (Flameshot example)
 
 With Flameshot, **Ctrl+C** after a capture often puts the same filename (`image.png`) on the clipboard. Pasting into Cursor, a browser, or chat repeatedly fails or overwrites the previous image.
+(As of September 14, 2026, this issue has been officially resolved by Cursor and VS Code Copilot. However, it still persists in Chrome Gemini.)
 
 ## What this app does
 
